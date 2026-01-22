@@ -1,27 +1,27 @@
-# API:t används som ett enkelt presentationslager ovanpå datan.
-# Det var inte nödvändigt för just denna uppgift.
-# Syftet är inte att bygga ett fullskaligt system,
-# utan att visa hur data kan exponeras strukturerat via endpoints.
+# The API is used as a simple presentation layer on top of the data.
+# It was not strictly necessary for this assignment.
+# The goal is not to build a full-scale system,
+# but to demonstrate how data can be exposed in a structured way via endpoints.
 
 from fastapi import FastAPI, HTTPException
 from module import get_connection, run_query
 
-# FastAPI används för att snabbt kunna visa datan i webbläsaren
-# utan att blanda in analyslogik eller visualisering här.
+# FastAPI is used to quickly expose the data in the browser
+# without mixing in analysis or visualization logic here.
 app = FastAPI()
 
 
 @app.get("/")
 def root():
-    # En enkel root-endpoint används för att snabbt kunna verifiera
-    # att API:t är igång och fungerar.
+    # A simple root endpoint is used to quickly verify
+    # that the API is running and working correctly.
     return {"status": "ok"}
 
 
 @app.get("/tables")
 def list_tables():
-    # Denna endpoint finns för att ge en överblick över datakällan.
-    # Det gör API:t självdokumenterande och underlättar vidare analys.
+# This endpoint exists to provide an overview of the data source.
+# It makes the API more self-documenting and easier to work with in further analysis.
     con = get_connection()
     try:
         rows = run_query(
@@ -35,10 +35,10 @@ def list_tables():
 
 @app.get("/preview/{table}")
 def preview_table(table: str, limit: int = 5):
-    # Förhandsvisning används för att kunna utforska datan
-    # utan att läsa in hela tabeller i onödan.
-    # En begränsad whitelist används för att minska risken
-    # för felaktiga eller oavsiktliga frågor.
+# A preview is used to explore the data
+# without unnecessarily loading entire tables.
+# A limited whitelist is applied to reduce the risk
+# of incorrect or unintended queries.
     allowed_tables = {"movies", "directors"}
     if table not in allowed_tables:
         raise HTTPException(
@@ -55,3 +55,4 @@ def preview_table(table: str, limit: int = 5):
         )
     finally:
         con.close()
+
