@@ -34,8 +34,8 @@ def run_query(
 # I want to create JOINs between the "Directors" and "Movies" tables.
 def get_movies_with_directors() -> pd.DataFrame:
     """
-    Hämtar filmer tillsammans med regissörsinformation 
-    och returnerar en DataFrame redo för visualisering.
+    Fetches movies together with director information
+    and returns a DataFrame ready for visualization.
     """
 
     query = """
@@ -59,3 +59,4 @@ def get_movies_with_directors() -> pd.DataFrame:
         df = pd.read_sql_query(query, con)
 
     return df 
+
