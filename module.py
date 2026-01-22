@@ -1,19 +1,20 @@
-# Denna fil används som ett separat datalager.
-# Syftet med detta arbete är att samla all databashantering på ett ställe,
-# på så sätt kan analys och visualisering kan hållas rena och lättlästa.
+# This file is used as a separate data access layer.
+# The purpose is to keep all database handling in one place,
+# so that analysis and visualization code can remain clean and easy to read.
 import sqlite3
 import pandas as pd
 from pathlib import Path
 from typing import Any
 
-# Databasfilen ligger i samma mapp som koden för att undvika hårdkodade sökvägar
+# The database file is located in the same directory as the code
+# to avoid hard-coded file paths.
 DB_NAME = "movies.sqlite"
 
 
 
 def get_connection() -> sqlite3.Connection:
-    # En gemensam funktion för databaskoppling gör att resten av projektet
-    # inte behöver känna till var databasen ligger eller hur kopplingen skapas.
+    # A shared database connection function allows the rest of the project
+    # to remain unaware of where the database is located or how the connection is created.
     db_path = Path(__file__).parent / DB_NAME
     return sqlite3.connect(db_path)
 
@@ -23,14 +24,14 @@ def run_query(
     sql: str,
     params: tuple[Any, ...] = ()
 ) -> list[dict[str, Any]]:
-    # Genom att samla alla SQL-frågor i en och samma funktion
-    # blir koden mer återanvändbar och enklare att felsöka.
+   # By collecting all SQL queries in a single function,
+   # the code becomes more reusable and easier to debug.
     con.row_factory = sqlite3.Row
     cursor = con.execute(sql, params)
     return [dict(row) for row in cursor.fetchall()]
 
 
-# Jag vill skapa JOINS mellan tabellerna "Directors" samt "Movies"
+# I want to create JOINs between the "Directors" and "Movies" tables.
 def get_movies_with_directors() -> pd.DataFrame:
     """
     Hämtar filmer tillsammans med regissörsinformation 
@@ -56,4 +57,5 @@ def get_movies_with_directors() -> pd.DataFrame:
 
     with get_connection() as con:
         df = pd.read_sql_query(query, con)
+
     return df 
