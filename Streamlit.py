@@ -1,16 +1,16 @@
-# Den här filen är själva användargränssnittet.
-# Här bestämmer jag hur visualiseringarna presenteras, i vilken ordning
-# och hur användaren kan interagera med dem.
+# This file is the main user interface of the application.
+# Here I decide how the visualizations are presented, in what order,
+# and how the user can interact with them.
 #
-# Jag har medvetet valt att inte lägga någon analys eller
-# visualiseringslogik här, utan bara:
-# – ladda data
-# – anropa färdiga visualiseringsfunktioner
-# – visa dem i flikar och layout
+# I have intentionally chosen not to place any analysis or
+# visualization logic in this file. Instead, it only:
+# – loads the data
+# – calls prepared visualization functions
+# – displays them using tabs and layout
 #
-# På så sätt blir koden tydligare, lättare att läsa och enklare att ändra.
-# Det gör också att Streamlit-delen fokuserar på presentation,
-# medan analysen ligger separat.
+# This makes the code clearer, easier to read, and simpler to modify.
+# It also ensures that the Streamlit part focuses on presentation,
+# while the analysis is kept separate.
 
 
 import streamlit as st
@@ -32,10 +32,11 @@ st.title("Movies dashboard")
 
 @st.cache_data
 def load_data():
-    # Jag cachar för att jag inte vill läsa om och joina datan varje gång jag klickar runt i appen
+    # I use caching so the data does not have to be reloaded and joined
+    # every time I interact with the app.
     df = get_movies_with_directors()
 
-    # Jag gör om siffror direkt så att seaborn och sortering funkar utan strul
+    # I convert numeric values early so that seaborn and sorting work correctly.
     for col in ["popularity", "vote_average", "vote_count", "year"]:
         if col in df.columns:
             df[col] = pd.to_numeric(df[col], errors="coerce")
@@ -66,3 +67,4 @@ with tab2:
 with tab3:
     st.subheader("Betyg")
     st.pyplot(fig_median_rating_per_director(df_top))
+
